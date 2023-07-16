@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bar Chart with D3.js</title>
+  <!-- Include D3.js library -->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+  <!-- Container to hold the bar chart -->
+  <div id="chartContainer"></div>
+
+  <script>
+    // Load the CSV data
+    d3.csv("https://github.com/ryan-klein-ok/u_of_i_project/blob/main/test.csv").then(function(data) {
+      // Convert the "count" values to numbers
+      data.forEach(function(d) {
+        d.count = +d.count;
+      });
+
+      // Sort the data by "count" in descending order
+      data.sort(function(a, b) {
+        return d3.descending(a.count, b.count);
+      });
+
+      // Set up the dimensions for the chart
+      const margin = { top: 20, right: 20, bottom: 60, left: 60 };
+      const width = 800 - margin.left - margin.right;
+      const height = 400 - margin.top - margin.bottom;
+
+      // Create an SVG element for the chart
+      const svg = d3.select("#chartContainer")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      // Set up the x-axis scale
+      const x = d3.scaleBand()
+        .domain(data.map(d => d.country))
+        .range([0, width])
+        .padding(0.1);
+
+      // Set up the y-axis scale
+      const y = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.count)])
+        .range([height, 0]);
+
+      // Create the bars
+      svg.selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.country))
+        .attr("y", d => y(d.count))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.count))
+        .attr("fill", "steelblue")
+        .on("mouseover", function(event, d) {
+          // Show the "type" on mouseover
+          tooltip.text("Type: " + d.type)
+            .style("visibility", "visible");
+        })
+        .on("mousemove", function(event) {
+          // Position the tooltip relative to the mouse pointer
+          tooltip.style("top", (event.pageY - 10) + "px")
+            .style("left", (event.pageX + 10) + "px");
+        })
+        .on("mouseout", function() {
+          // Hide the tooltip on mouseout
+          tooltip.style("visibility", "hidden");
+        });
+
+      // Create the x-axis
+      svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", "-.55em")
+        .attr("transform", "rotate(-90)");
+
+      // Create the y-axis
+      svg.append("g")
+        .call(d3.axisLeft(y));
+
+      // Create a tooltip element
+      const tooltip = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("background-color", "white")
+        .style("border", "1px solid #ddd")
+        .style("padding", "8px")
+        .style("font-size", "12px")
+        .style("visibility", "hidden");
+
+    }).catch(function(error) {
+      console.log(error);
+    });
+  </script>
+</body>
+</html>
