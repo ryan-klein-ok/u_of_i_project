@@ -7,6 +7,10 @@
   <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
+<header>
+    <h1>US Imports</h1>
+    <p>Welcome to our data visualization</p>
+  </header>
   <!-- Container to hold the bar chart -->
   <div id="chartContainer"></div>
 <button onclick="window.location.href='index.html'">Show Chart</button>
@@ -14,7 +18,7 @@
   <button onclick="window.location.href='document2.html'">Document 2</button>
   <script>
     // Load the CSV data
-    d3.csv("https://github.com/ryan-klein-ok/u_of_i_project/blob/main/test.csv").then(function(data) {
+    d3.csv("https://raw.githubusercontent.com/ryan-klein-ok/u_of_i_project/main/test.csv").then(function(data) {
       // Convert the "count" values to numbers
       data.forEach(function(d) {
         d.count = +d.count;
