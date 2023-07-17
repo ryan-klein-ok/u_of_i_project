@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Top 10 Food Importers to the U.S.</title>
-  <!-- Include D3.js library -->
   <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
@@ -13,9 +12,8 @@
     <p>Emphasis on Canada</p>
   </header>
 
-  <!-- Container to hold the bar chart -->
-  <div id="chartContainer"></div>
-<p><em>Hover to see each country's main commodity export</em></p>
+  <div id="chart"></div>
+<p><em>Hover to see each country's main commodity export and how much it contributes to the total</em></p>
   
   <!-- Buttons to link to different HTML documents -->
   <button onclick="window.location.href='index.html'">Summary Chart</button>
@@ -25,49 +23,37 @@
   
 
   <script>
-    // Load the CSV data
     d3.csv("https://raw.githubusercontent.com/ryan-klein-ok/u_of_i_project/main/country.csv").then(function(data) {
-      // Convert the "country_total" values to numbers
       data.forEach(function(d) {
         d.country_total = +d.country_total;
       });
 
-      // Sort the data by "country_total" in descending order
       data.sort(function(a, b) {
         return d3.descending(a.country_total, b.country_total);
       });
 
-      // Set up the dimensions for the chart
       const margin = { top: 20, right: 20, bottom: 60, left: 60 };
       const width = 800 - margin.left - margin.right;
       const height = 400 - margin.top - margin.bottom;
 
-      // Create an SVG element for the chart
-      const svg = d3.select("#chartContainer")
+      const svg = d3.select("#chart")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      // Set up the x-axis scale
+      //  x-axis scale
       const x = d3.scaleBand()
         .domain(data.map(d => d.country))
         .range([0, width])
         .padding(0.1);
 
-      // Set up the y-axis scale
+      // y-axis scale
       const y = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.country_total)])
         .range([height, 0]);
 
-  const colorScale = d3.scaleSequential()
-        .domain([0, d3.max(data, d => d.country_total)])
-        .interpolator(d3.interpolateGreens); 
-
-
-      
-      // Create the bars
       svg.selectAll(".bar")
         .data(data)
         .enter()
@@ -77,23 +63,20 @@
         .attr("y", d => y(d.country_total))
         .attr("width", x.bandwidth())
         .attr("height", d => height - y(d.country_total))
-         .attr("fill", d => colorScale(d.country_total)) 
+ .attr("fill", "#00ff00")
         .on("mouseover", function(event, d) {
-          // Show "country" and "country_total" on mouseover
           tooltip.html("<strong>Commodity:</strong> " + d.commodity + "<br><strong>Commodity Total:</strong> " + d.commodity_total)
             .style("visibility", "visible");
         })
         .on("mousemove", function(event) {
-          // Position the tooltip relative to the mouse pointer
           tooltip.style("top", (event.pageY - 10) + "px")
             .style("left", (event.pageX + 10) + "px");
         })
         .on("mouseout", function() {
-          // Hide the tooltip on mouseout
           tooltip.style("visibility", "hidden");
         });
 
-      // Create the x-axis
+      // Create x-axis
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x))
@@ -103,11 +86,10 @@
         .attr("dy", "-.55em")
         .attr("transform", "rotate(-90)");
 
-      // Create the y-axis
-      svg.append("g")
-        .call(d3.axisLeft(y));
+      // Create y-axis
+      svg.append("g").call(d3.axisLeft(y));
 
-      // Create a tooltip element
+      // Create tooltip 
       const tooltip = d3.select("body")
         .append("div")
         .style("position", "absolute")
