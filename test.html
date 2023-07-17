@@ -1,3 +1,5 @@
+
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,23 +9,29 @@
   <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
-<header>
-    <h1>US Imports</h1>
+  <!-- Header -->
+  <header>
+    <h1>Bar Chart Example with D3.js</h1>
     <p>Welcome to our data visualization</p>
   </header>
+
   <!-- Container to hold the bar chart -->
   <div id="chartContainer"></div>
-<button onclick="window.location.href='index.html'">Show Chart</button>
+
+  <!-- Buttons to link to different HTML documents -->
+  <button onclick="window.location.href='index.html'">Show Chart</button>
   <button onclick="window.location.href='document1.html'">Document 1</button>
   <button onclick="window.location.href='document2.html'">Document 2</button>
+
   <script>
     // Load the CSV data
     d3.csv("https://raw.githubusercontent.com/ryan-klein-ok/u_of_i_project/main/country.csv").then(function(data) {
+      // Convert the "country_total" values to numbers
       data.forEach(function(d) {
         d.country_total = +d.country_total;
       });
 
-      // Sort the data by "count" in descending order
+      // Sort the data by "country_total" in descending order
       data.sort(function(a, b) {
         return d3.descending(a.country_total, b.country_total);
       });
@@ -49,7 +57,7 @@
 
       // Set up the y-axis scale
       const y = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.count)])
+        .domain([0, d3.max(data, d => d.country_total)])
         .range([height, 0]);
 
       // Create the bars
@@ -63,19 +71,20 @@
         .attr("width", x.bandwidth())
         .attr("height", d => height - y(d.country_total))
         .attr("fill", "steelblue")
-         .on("mouseover", function(event, d) {
-        tooltip.html("<strong>Commodity Type:</strong> " + d.type + "<br><strong>Commodity Total:</strong> " + d.count)
-          .style("visibility", "visible");
-      })
-      .on("mousemove", function(event) {
-        // Position the tooltip relative to the mouse pointer
-        tooltip.style("top", (event.pageY - 10) + "px")
-          .style("left", (event.pageX + 10) + "px");
-      })
-      .on("mouseout", function() {
-        // Hide the tooltip on mouseout
-        tooltip.style("visibility", "hidden");
-      });
+        .on("mouseover", function(event, d) {
+          // Show "country" and "country_total" on mouseover
+          tooltip.html("<strong>Country:</strong> " + d.country + "<br><strong>Country Total:</strong> " + d.country_total)
+            .style("visibility", "visible");
+        })
+        .on("mousemove", function(event) {
+          // Position the tooltip relative to the mouse pointer
+          tooltip.style("top", (event.pageY - 10) + "px")
+            .style("left", (event.pageX + 10) + "px");
+        })
+        .on("mouseout", function() {
+          // Hide the tooltip on mouseout
+          tooltip.style("visibility", "hidden");
+        });
 
       // Create the x-axis
       svg.append("g")
