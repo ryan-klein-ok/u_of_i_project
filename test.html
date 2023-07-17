@@ -18,15 +18,14 @@
   <button onclick="window.location.href='document2.html'">Document 2</button>
   <script>
     // Load the CSV data
-    d3.csv("https://raw.githubusercontent.com/ryan-klein-ok/u_of_i_project/main/test.csv").then(function(data) {
-      // Convert the "count" values to numbers
+    d3.csv("https://raw.githubusercontent.com/ryan-klein-ok/u_of_i_project/main/country.csv").then(function(data) {
       data.forEach(function(d) {
-        d.count = +d.count;
+        d.country_total = +d.country_total;
       });
 
       // Sort the data by "count" in descending order
       data.sort(function(a, b) {
-        return d3.descending(a.count, b.count);
+        return d3.descending(a.country_total, b.country_total);
       });
 
       // Set up the dimensions for the chart
@@ -60,24 +59,23 @@
         .append("rect")
         .attr("class", "bar")
         .attr("x", d => x(d.country))
-        .attr("y", d => y(d.count))
+        .attr("y", d => y(d.country_total))
         .attr("width", x.bandwidth())
-        .attr("height", d => height - y(d.count))
+        .attr("height", d => height - y(d.country_total))
         .attr("fill", "steelblue")
-        .on("mouseover", function(event, d) {
-          // Show the "type" on mouseover
-          tooltip.text("Type: " + d.type)
-            .style("visibility", "visible");
-        })
-        .on("mousemove", function(event) {
-          // Position the tooltip relative to the mouse pointer
-          tooltip.style("top", (event.pageY - 10) + "px")
-            .style("left", (event.pageX + 10) + "px");
-        })
-        .on("mouseout", function() {
-          // Hide the tooltip on mouseout
-          tooltip.style("visibility", "hidden");
-        });
+         .on("mouseover", function(event, d) {
+        tooltip.html("<strong>Commodity Type:</strong> " + d.type + "<br><strong>Commodity Total:</strong> " + d.count)
+          .style("visibility", "visible");
+      })
+      .on("mousemove", function(event) {
+        // Position the tooltip relative to the mouse pointer
+        tooltip.style("top", (event.pageY - 10) + "px")
+          .style("left", (event.pageX + 10) + "px");
+      })
+      .on("mouseout", function() {
+        // Hide the tooltip on mouseout
+        tooltip.style("visibility", "hidden");
+      });
 
       // Create the x-axis
       svg.append("g")
