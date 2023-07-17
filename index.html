@@ -84,8 +84,12 @@
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
         .attr("dy", "-.55em")
-        .attr("transform", "rotate(-45)");
+        .attr("transform", "rotate(-90)");
+    const maxLabelWidth = d3.max(xAxis.nodes(), d => d.getBBox().width);
+      const adjustedRightMargin = margin.right + maxLabelWidth;
 
+      // Update the SVG container width to accommodate the longest label
+      svg.attr("width", width + margin.left + adjustedRightMargin);
       // Create y-axis
       svg.append("g").call(d3.axisLeft(y));
 
