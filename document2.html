@@ -9,7 +9,7 @@
   <!-- Header -->
   <header>
     <h1>Canada's Top 15 Categories by Commodity</h1>
-    <p>Canada's top 15 categories, split by the commodity that makes up each one."</p>
+    <p>Canada's top 15 categories, split by the commodity that makes up each one.</p>
   </header>
 
   <!-- Container to hold the bar chart -->
@@ -92,8 +92,10 @@
         .style("visibility", "hidden");
 
       svg.append("text")
-        .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.top + 20) + ")")
-        .style("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height + (margin.bottom / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
         .text("Commodity");
 
       svg.append("text")
