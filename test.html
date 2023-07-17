@@ -61,6 +61,11 @@
         .domain([0, d3.max(data, d => d.country_total)])
         .range([height, 0]);
 
+const colorScale = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.country_total)])
+        .range(["#cce5ff", "#007bff"])
+
+      
       // Create the bars
       svg.selectAll(".bar")
         .data(data)
@@ -71,7 +76,7 @@
         .attr("y", d => y(d.country_total))
         .attr("width", x.bandwidth())
         .attr("height", d => height - y(d.country_total))
-        .attr("fill", "steelblue")
+         .attr("fill", d => colorScale(d.country_total)) 
         .on("mouseover", function(event, d) {
           // Show "country" and "country_total" on mouseover
           tooltip.html("<strong>Commodity:</strong> " + d.commodity + "<br><strong>Commodity Total:</strong> " + d.commodity_total)
