@@ -9,7 +9,7 @@
 
   <header>
     <h1>Canada's Category by Year</h1>
-    <p>This chart shows how Canada's imports to the U.S. have changed over the years, in total and in type.</p>
+    <p>This chart shows how Canada's imports to the U.S. have changed over the years, in total and in type.The color designates the main type of import. </p>
   </header>
 
   <div id="chart"></div>
@@ -101,7 +101,7 @@
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Year Cat Value");
+        .text("Category Value");
 
     }).catch(function(error) {
       console.log(error);
