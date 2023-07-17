@@ -49,6 +49,31 @@
       const colorScale = d3.scaleOrdinal()
         .domain(data.map(d => d.Category))
         .range(d3.schemeCategory10);
+let sortOrder = false; // Initial sorting order (false for ascending, true for descending)
+
+    function reverseSort() {
+      // Reverse the sorting order
+      sortOrder = !sortOrder;
+
+      // Re-sort the data based on category_total
+      data.sort(function(a, b) {
+        return sortOrder ? d3.descending(a.category_total, b.category_total) : d3.ascending(a.category_total, b.category_total);
+      });
+
+      // Update the x and y scales with the new data order
+      x.domain(data.map(d => d.Commodity));
+      y.domain([0, d3.max(data, d => d.category_total)]);
+
+      // Select and update the bars
+      const bars = svg.selectAll(".bar")
+        .data(data, d => d.Commodity);
+
+      bars.transition()
+        .duration(500)
+        .attr("x", d => x(d.Commodity))
+        .attr("y", d => y(d.category_total))
+        .attr("width", x.bandwidth() - 2)
+        .attr("height", d => height - y(d.category_total));
 
       svg.selectAll(".bar")
         .data(data)
@@ -82,31 +107,6 @@
         .attr("transform", "rotate(-45)");
 
       svg.append("g").call(d3.axisLeft(y));
-let sortOrder = false; // Initial sorting order (false for ascending, true for descending)
-
-    function reverseSort() {
-      // Reverse the sorting order
-      sortOrder = !sortOrder;
-
-      // Re-sort the data based on category_total
-      data.sort(function(a, b) {
-        return sortOrder ? d3.descending(a.category_total, b.category_total) : d3.ascending(a.category_total, b.category_total);
-      });
-
-      // Update the x and y scales with the new data order
-      x.domain(data.map(d => d.Commodity));
-      y.domain([0, d3.max(data, d => d.category_total)]);
-
-      // Select and update the bars
-      const bars = svg.selectAll(".bar")
-        .data(data, d => d.Commodity);
-
-      bars.transition()
-        .duration(500)
-        .attr("x", d => x(d.Commodity))
-        .attr("y", d => y(d.category_total))
-        .attr("width", x.bandwidth() - 2)
-        .attr("height", d => height - y(d.category_total));
 
       const tooltip = d3.select("body")
         .append("div")
