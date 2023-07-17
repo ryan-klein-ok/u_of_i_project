@@ -25,9 +25,9 @@
         return d3.descending(a.category_total, b.category_total);
       });
 
-    const margin = { top: 60, right: 40, bottom: 100, left: 100 };
+   const margin = { top: 60, right: 40, bottom: 120, left: 100 };
       const width = 1000 - margin.left - margin.right;
-      const height = 600 - margin.top - margin.bottom + 50;
+      const height = 600 - margin.top - margin.bottom;
 
       const svg = d3.select("#chart")
         .append("svg")
@@ -93,7 +93,7 @@
 
     svg.append("text")
         .attr("x", width / 2)
-        .attr("y", height + (margin.bottom - 20))
+        .attr("y", height + (margin.bottom / 2))
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
         .text("Commodity");
