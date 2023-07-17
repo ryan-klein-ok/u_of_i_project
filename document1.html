@@ -9,7 +9,7 @@
   <!-- Header -->
   <header>
     <h1>Canada's Category by Year</h1>
-    <p>This chart displays the "year_cat_value" for each year in Canada, with bars colored by "category."</p>
+    <p>This chart shows how Canada's imports to the U.S. have changed over the years, in total and in type.</p>
   </header>
 
   <!-- Container to hold the bar chart -->
@@ -89,6 +89,31 @@
         .style("font-size", "12px")
         .style("visibility", "hidden");
 
+const legend = d3.select("#legend")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", 50)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + ", 0)");
+
+      const legendItems = legend.selectAll(".legend-item")
+        .data(colorScale.domain())
+        .enter()
+        .append("g")
+        .attr("class", "legend-item")
+        .attr("transform", (d, i) => "translate(" + i * 120 + ", 0)");
+
+      legendItems.append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", colorScale);
+
+      legendItems.append("text")
+        .attr("x", 30)
+        .attr("y", 15)
+        .style("font-size", "12px")
+        .text(d => d);
+      
       // Optional: Add chart title
       svg.append("text")
         .attr("x", (width / 2))
