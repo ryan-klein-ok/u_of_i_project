@@ -42,7 +42,6 @@
         .domain([0, d3.max(data, d => d.year_cat_value)])
         .range([height, 0]);
 
-      // Define the color scale for the bars based on "category"
       const colorScale = d3.scaleOrdinal()
         .domain(data.map(d => d.category))
         .range(d3.schemeCategory10);
@@ -58,7 +57,7 @@
         .attr("height", d => height - y(d.year_cat_value))
         .attr("fill", d => colorScale(d.category))
         .on("mouseover", function(event, d) {
-          tooltip.html("<strong>Category:</strong> " + d.category + "<br><strong>Year Cat Value:</strong> " + d.year_cat_value)
+          tooltip.html("<strong>Category:</strong> " + d.category + "<br><strong>Category Value:</strong> " + d.year_cat_value)
             .style("visibility", "visible");
         })
         .on("mousemove", function(event) {
@@ -95,24 +94,6 @@ const legend = d3.select("#legend")
         .attr("height", 50)
         .append("g")
         .attr("transform", "translate(" + margin.left + ", 0)");
-
-      const legendItems = legend.selectAll(".legend-item")
-        .data(colorScale.domain())
-        .enter()
-        .append("g")
-        .attr("class", "legend-item")
-        .attr("transform", (d, i) => "translate(" + i * 120 + ", 0)");
-
-      legendItems.append("rect")
-        .attr("width", 20)
-        .attr("height", 20)
-        .attr("fill", colorScale);
-
-      legendItems.append("text")
-        .attr("x", 30)
-        .attr("y", 15)
-        .style("font-size", "12px")
-        .text(d => d);
       
       // Optional: Add chart title
       svg.append("text")
