@@ -75,6 +75,24 @@ let sortOrder = false; // Initial sorting order (false for ascending, true for d
         .attr("width", x.bandwidth() - 2)
         .attr("height", d => height - y(d.category_total));
 
+            // Update the x-axis
+      svg.select(".x-axis")
+        .transition()
+        .duration(500)
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", "-.55em")
+        .attr("transform", "rotate(-90)");
+
+      // Update the y-axis
+      svg.select(".y-axis")
+        .transition()
+        .duration(500)
+        .call(d3.axisLeft(y));
+    }
+
       svg.selectAll(".bar")
         .data(data)
         .enter()
