@@ -73,7 +73,7 @@ https://raw.githubusercontent.com/ryan-klein-ok/u_of_i_project/main/country.csv
         .attr("fill", "steelblue")
         .on("mouseover", function(event, d) {
           // Show "country" and "country_total" on mouseover
-          tooltip.html("<strong>Country:</strong> " + d.country + "<br><strong>Country Total:</strong> " + d.country_total)
+          tooltip.html("<strong>Commodity:</strong> " + d.commodity + "<br><strong>Commodity Total:</strong> " + d.commodity_total)
             .style("visibility", "visible");
         })
         .on("mousemove", function(event) {
