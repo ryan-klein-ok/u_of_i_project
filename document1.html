@@ -102,6 +102,17 @@
         .style("text-anchor", "middle")
         .text("Category Value");
 
+       const annotationX = "The largest category changed here"; 
+    const annotationY = 1000; // Replace with the y-value where you want the annotation
+
+    const annotation = svg.append("text")
+      .attr("x", x(annotationX) + x.bandwidth() / 2) // Position it at the center of the corresponding bar
+      .attr("y", y(annotationY) - 10) // Offset it above the bar (you can adjust this value)
+      .attr("text-anchor", "middle")
+      .style("font-size", "12px")
+      .style("fill", "red") // Set the color of the annotation text
+      .text("Annotation");
+
     }).catch(function(error) {
       console.log(error);
     });
