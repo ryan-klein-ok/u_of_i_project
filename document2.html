@@ -8,8 +8,8 @@
 <body>
 
   <header>
-    <h1>Canada's Top 15 Categories by Commodity</h1>
-    <p>Canada's top 15 categories, split by the commodity that comprises each one. Each bar is color coded to it's category.</p>
+    <h1 style="font-family: Calibri;">Canada's Top 15 Categories by Commodity</h1>
+    <p style="font-family: Calibri;">Canada's top 15 categories, split by the commodity that comprises each one. Each bar is color coded to it's category.</p>
   </header>
 
   <div id="chart"></div>
@@ -27,6 +27,10 @@
         return d3.descending(a.category_total, b.category_total);
       });
 
+d3.selectAll("text")
+      .style("font-family", "Calibri");
+      
+      
    const margin = { top: 60, right: 40, bottom: 120, left: 100 };
       const width = 1000 - margin.left - margin.right;
       const height = 600 - margin.top - margin.bottom;
