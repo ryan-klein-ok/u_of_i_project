@@ -8,8 +8,8 @@
 <body>
 
   <header>
-    <h1>Canada's Category by Year</h1>
-    <p>This chart shows how Canada's imports to the U.S. have increased over the years, in total and in type. The color designates the main type of import; hover over the bar to see the total amount of that category for the year. </p>
+    <h1 style="font-family: Calibri;">Canada's Category by Year</h1>
+    <p style="font-family: Calibri;">This chart shows how Canada's imports to the U.S. have increased over the years, in total and in type. The color designates the main type of import; hover over the bar to see the total amount of that category for the year. </p>
   </header>
 
   <div id="chart"></div>
@@ -23,6 +23,9 @@
         d.year_cat_value = +d.year_cat_value;
       });
 
+d3.selectAll("text")
+      .style("font-family", "Calibri");
+      
       const margin = { top: 40, right: 20, bottom: 120, left: 80 };
       const width = 800 - margin.left - margin.right;
       const height = 400 - margin.top - margin.bottom;
