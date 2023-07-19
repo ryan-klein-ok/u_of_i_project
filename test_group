@@ -1,1 +1,167 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Canada's Top 15 Categories by Commodity</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>Canada's Top 15 Categories by Commodity</h1>
+    <p>Canada's top 15 categories, split by the commodity that comprises each one. Each bar is color coded to it's category.</p>
+  </header>
+
+  <div id="chart"></div>
+ <button onclick="window.location.href='https://ryan-klein-ok.github.io/u_of_i_project/index.html'">Summary Chart</button>
+  <button onclick="window.location.href='https://ryan-klein-ok.github.io/u_of_i_project/document1.html'">Canada's Commodity by Year</button>
+
+<button onclick="groupAndSortByCategory()">Group and Sort by Category</button>
+
+  
+  <script>
+    d3.csv("https://raw.githubusercontent.com/ryan-klein-ok/u_of_i_project/main/canada_top_15_cat.csv").then(function(data) {
+      data.forEach(function(d) {
+        d.category_total = +d.category_total;
+      });
+
+      data.sort(function(a, b) {
+        return d3.descending(a.category_total, b.category_total);
+      });
+
+   const margin = { top: 60, right: 40, bottom: 120, left: 100 };
+      const width = 1000 - margin.left - margin.right;
+      const height = 600 - margin.top - margin.bottom;
+
+      const svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      const x = d3.scaleBand()
+        .domain(data.map(d => d.Commodity))
+        .range([0, width])
+        .padding(0.1);
+
+      const y = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.category_total)])
+        .range([height, 0]);
+
+      const colorScale = d3.scaleOrdinal()
+        .domain(data.map(d => d.Category))
+        .range(d3.schemeCategory10);
+
+      svg.selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.Commodity))
+        .attr("y", d => y(d.category_total))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.category_total))
+        .attr("fill", d => colorScale(d.Category))
+        .on("mouseover", function(event, d) {
+          tooltip.html("<strong>Category:</strong> " + d.Category + "<br><strong>Category Total:</strong> " + d.category_total)
+            .style("visibility", "visible");
+        })
+        .on("mousemove", function(event) {
+          tooltip.style("top", (event.pageY - 10) + "px")
+            .style("left", (event.pageX + 10) + "px");
+        })
+        .on("mouseout", function() {
+          tooltip.style("visibility", "hidden");
+        });
+
+      svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", "-.55em")
+        .attr("transform", "rotate(-45)");
+
+      svg.append("g").call(d3.axisLeft(y));
+
+      const tooltip = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("background-color", "white")
+        .style("border", "1px solid #ddd")
+        .style("padding", "8px")
+        .style("font-size", "12px")
+        .style("visibility", "hidden");
+<!--
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + (margin.bottom))
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .text("Commodity");
+     -->
+
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Category Value");
+
+ function groupAndSortByCategory() {
+      // Group the data by Category
+      const groupedData = d3.groups(data, d => d.Category);
+
+      // Calculate the total for each category
+      const categoryTotal = groupedData.map(group => ({
+        Category: group[0],
+        category_total: d3.sum(group[1], d => d.category_total)
+      }));
+
+      // Sort the data by category_total in descending order
+      categoryTotal.sort((a, b) => d3.descending(a.category_total, b.category_total));
+
+      // Update the x and y scales with the new data order
+      x.domain(categoryTotal.map(d => d.Category));
+      y.domain([0, d3.max(categoryTotal, d => d.category_total)]);
+
+      // Select and update the bars
+      const bars = svg.selectAll(".bar")
+        .data(categoryTotal, d => d.Category);
+
+      bars.transition()
+        .duration(500)
+        .attr("x", d => x(d.Category))
+        .attr("y", d => y(d.category_total))
+        .attr("width", x.bandwidth() - 2)
+        .attr("height", d => height - y(d.category_total));
+
+      // Update the x-axis
+      svg.select(".x-axis")
+        .transition()
+        .duration(500)
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", "-.55em")
+        .attr("transform", "rotate(-90)");
+
+      // Update the y-axis
+      svg.select(".y-axis")
+        .transition()
+        .duration(500)
+        .call(d3.axisLeft(y));
+    }
+
+
+    }).catch(function(error) {
+      console.log(error);
+    });
+  </script>
+</body>
+</html>
