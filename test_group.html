@@ -63,12 +63,6 @@ d3.selectAll("text")
         .attr("fill", d => colorScale(d.Category))
         .attr("x", d => x(d.Commodity)*.1)
         .attr("y", d => y(d.category_total)*.1)
-        .transition().duration(3000).delay(1500)
-        .attr("x", d => x(d.Commodity))
-        .attr("y", d => y(d.category_total))
-        .attr("width", x.bandwidth())
-        .attr("height", d => height - y(d.category_total))
-        .attr("fill", d => colorScale(d.Category))
         .on("mouseover", function(event, d) {
           tooltip.html("<strong>Category:</strong> " + d.Category + "<br><strong>Category Total:</strong> " + d.category_total)
             .style("visibility", "visible");
@@ -79,7 +73,14 @@ d3.selectAll("text")
         })
         .on("mouseout", function() {
           tooltip.style("visibility", "hidden");
-        });
+        })
+        .transition().duration(3000).delay(1500)
+        .attr("x", d => x(d.Commodity))
+        .attr("y", d => y(d.category_total))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.category_total))
+        .attr("fill", d => colorScale(d.Category))
+        ;
 
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
